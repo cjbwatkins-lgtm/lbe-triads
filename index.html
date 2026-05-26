@@ -761,15 +761,6 @@ function renderInvPicker() {
   const el = document.getElementById('inv-picker');
   if (!el) return;
   el.innerHTML = '';
-  const allSelected = selectedInversions.size === 3;
-
-  // "All" button
-  const all = document.createElement('button');
-  all.className = 'inv-btn' + (allSelected ? ' active' : '');
-  all.textContent = 'All';
-  all.onclick = () => { selectedInversions = new Set([0, 1, 2]); renderInvPicker(); };
-  el.appendChild(all);
-
   const labels = ['Root', '1st Inv', '2nd Inv'];
   [0, 1, 2].forEach(inv => {
     const b = document.createElement('button');
