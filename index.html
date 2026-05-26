@@ -36,6 +36,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .bm-sub  { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.03em; }
 
 /* HOME */
+.inv-picker { display: flex; gap: 8px; margin-bottom: 14px; }
+.inv-btn { flex: 1; padding: 10px 4px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--card); color: var(--muted); font-size: 0.78rem; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; line-height: 1.3; }
+.inv-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(232,168,56,0.08); }
+.inv-section-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
 .menu { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
 .btn { background: var(--card); color: var(--text); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 18px; font-size: 1rem; cursor: pointer; text-align: left; transition: border-color 0.15s; width: 100%; }
 .btn:hover { border-color: var(--accent); }
@@ -125,6 +129,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <div class="bm-rule"></div>
     <div class="bm-sub">Triad Flashcards</div>
   </div>
+  <div class="inv-section-lbl">Inversions to practice</div>
+  <div class="inv-picker" id="inv-picker"></div>
   <div class="menu" id="tier-menu"></div>
 </div>
 
@@ -299,7 +305,11 @@ let sess = { cardN:0, correct:0, total:0, missed:new Set(), missStreak:{}, histo
 let queue = [];
 let curChord = null, curType = null, answered = false, savedCard = null, autoAdvTimer = null, wrongClickedThisCard = false;
 
-function activeChords() { return ALL_CHORDS.filter(TIERS[S.tier].filter); }
+let selectedInversions = new Set([0, 1, 2]); // 0=root, 1=1st, 2=2nd
+
+function activeChords() {
+  return ALL_CHORDS.filter(c => TIERS[S.tier].filter(c) && selectedInversions.has(c.inversion));
+}
 function boxOf(id) { return S.boxes[id] || 1; }
 function stateKey() { return `lbe-triads-${S.tier}`; }
 
@@ -746,7 +756,27 @@ function playChordArpeggio(chord) {
   });
 }
 
+function renderInvPicker() {
+  const el = document.getElementById('inv-picker');
+  if (!el) return;
+  el.innerHTML = '';
+  const labels = ['Root Position', '1st Inversion', '2nd Inversion'];
+  [0, 1, 2].forEach(inv => {
+    const b = document.createElement('button');
+    b.className = 'inv-btn' + (selectedInversions.has(inv) ? ' active' : '');
+    b.textContent = labels[inv];
+    b.onclick = () => {
+      if (selectedInversions.has(inv) && selectedInversions.size === 1) return; // keep at least 1
+      if (selectedInversions.has(inv)) selectedInversions.delete(inv);
+      else selectedInversions.add(inv);
+      renderInvPicker();
+    };
+    el.appendChild(b);
+  });
+}
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
+renderInvPicker();
 renderTierMenu();
 </script>
 </body>
