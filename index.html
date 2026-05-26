@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triads – Live Bass Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f14; --card: #1a1a24; --border: #2a2a38;
+  --accent: #e8a838; --green: #4fc3a1; --red: #e85e5e;
+  --text: #f0f0f0; --muted: #777; --r: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; }
+#app { width: 100%; max-width: 500px; padding: 16px 16px 40px; }
+.hidden { display: none !important; }
+
+/* BRAND MARK */
+.brand-mark { position: relative; text-align: center; padding: 30px 0 22px; overflow: visible; }
+.brand-blobs { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -56%); width: 260px; height: 110px; pointer-events: none; }
+.bblob { position: absolute; border-radius: 50%; }
+.bb-blue  { background: #3a6db5; width: 130px; height: 120px; top: -5px;  left: 60px;  filter: blur(30px); opacity: 0.32; }
+.bb-red   { background: #b83838; width:  90px; height:  85px; top:  5px;  left:  8px;  filter: blur(24px); opacity: 0.28; }
+.bb-gold  { background: #e8a838; width:  80px; height:  75px; top: -5px;  right: 12px; filter: blur(22px); opacity: 0.30; }
+.brand-mark::before, .brand-mark::after { content: ''; position: absolute; background: rgba(232,168,56,0.28); border-radius: 1px; width: 52px; height: 1.5px; transform: rotate(-38deg); }
+.brand-mark::before { top: 28px; left: 12px; }
+.brand-mark::after  { bottom: 30px; right: 12px; }
+.brand-text { position: relative; z-index: 1; line-height: 1; font-family: 'Oswald', system-ui, sans-serif; }
+.bm-live { display: block; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.38em; color: rgba(240,240,240,0.55); margin-bottom: 2px; }
+.bm-bass { display: block; font-size: 3rem; font-weight: 700; color: var(--accent); letter-spacing: 0.07em; line-height: 1; }
+.bm-ess  { display: block; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.42em; color: rgba(240,240,240,0.38); margin-top: 3px; }
+.bm-rule { width: 32px; height: 1px; background: linear-gradient(90deg, transparent, rgba(232,168,56,0.5), transparent); margin: 13px auto 9px; }
+.bm-sub  { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.03em; }
+
+/* HOME */
+.menu { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.btn { background: var(--card); color: var(--text); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 18px; font-size: 1rem; cursor: pointer; text-align: left; transition: border-color 0.15s; width: 100%; }
+.btn:hover { border-color: var(--accent); }
+.btn.pri { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+.btn.pri:hover { background: #f0b845; }
+.btn-lbl { font-weight: 600; }
+.btn-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.btn.pri .btn-sub { color: #5a4200; }
+
+/* SESSION HEADER */
+.sess-hdr { display: flex; justify-content: space-between; align-items: center; padding: 6px 0 14px; }
+.sess-info { font-size: 0.82rem; color: var(--muted); }
+.mbadge { background: var(--red); color: #fff; border-radius: 10px; padding: 3px 10px; font-size: 0.78rem; font-weight: 700; }
+
+/* CARD */
+.card { background: var(--card); border-radius: var(--r); padding: 18px 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 160px; }
+.card-lbl { align-self: flex-start; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+
+/* CHORD DISPLAY */
+.chord-display { text-align: center; padding: 4px 0 6px; }
+.chord-sym { font-size: 3rem; font-weight: 700; color: var(--accent); line-height: 1.1; font-family: 'Oswald', system-ui, sans-serif; }
+.chord-qual { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+.chord-inv-lbl { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-top: 4px; }
+
+/* STAFF SVG */
+.staff-svg { width: 100%; touch-action: none; display: block; }
+
+/* CHOICES */
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; width: 100%; }
+@media (max-width: 340px) { .choices { grid-template-columns: 1fr; } }
+.cbtn { background: #1e1e2c; border: 1.5px solid var(--border); border-radius: 10px; color: var(--text); padding: 12px 8px; font-size: 0.88rem; cursor: pointer; transition: border-color 0.12s, background 0.12s; min-height: 54px; text-align: center; line-height: 1.35; }
+.cbtn:hover:not(:disabled) { border-color: var(--accent); }
+.cbtn.ok { background: rgba(79,195,161,0.15); border-color: var(--green); color: var(--green); }
+.cbtn.no { background: rgba(232,94,94,0.15); border-color: var(--red); color: var(--red); }
+.cbtn:disabled { cursor: default; }
+.cbtn-notes { font-weight: 600; display: block; }
+.cbtn-chord { font-weight: 600; display: block; font-size: 0.85rem; }
+.cbtn-inv  { font-size: 0.72rem; color: var(--muted); display: block; margin-top: 2px; }
+.cbtn.ok .cbtn-inv, .cbtn.no .cbtn-inv { color: inherit; opacity: 0.75; }
+
+/* FEEDBACK */
+.fb { width: 100%; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; text-align: center; margin-top: 8px; }
+.fb.ok { background: rgba(79,195,161,0.12); color: var(--green); }
+.fb.no { background: rgba(232,94,94,0.12); color: var(--red); }
+
+/* NAV BUTTONS */
+.hdr-btn { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); padding: 6px 13px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+.hdr-btn:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
+.hdr-btn:disabled { opacity: 0.35; cursor: default; }
+.hdr-next { background: var(--accent); color: #000; border-color: var(--accent); }
+.hdr-next:hover:not(:disabled) { opacity: 0.88; color: #000; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 11px 22px; border-radius: 24px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 99; animation: toastIn 0.3s ease; white-space: nowrap; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(16px); } }
+
+/* SUMMARY */
+.sum-card { background: var(--card); border-radius: var(--r); padding: 22px; }
+.sum-card h2 { color: var(--accent); margin-bottom: 14px; }
+.srow { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.srow:last-child { border-bottom: none; }
+.srow-lbl { color: var(--muted); }
+.srow-val { font-weight: 700; }
+.missed-sec { margin-top: 16px; }
+.missed-sec h3 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.mtag { display: inline-block; background: rgba(232,94,94,0.1); color: var(--red); border: 1px solid rgba(232,94,94,0.25); border-radius: 6px; padding: 3px 8px; font-size: 0.82rem; margin: 3px; }
+.sum-actions { display: flex; gap: 10px; margin-top: 18px; }
+.sum-actions .btn { text-align: center; flex: 1; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME -->
+<div id="screen-home">
+  <div class="brand-mark">
+    <div class="brand-blobs">
+      <div class="bblob bb-blue"></div>
+      <div class="bblob bb-red"></div>
+      <div class="bblob bb-gold"></div>
+    </div>
+    <div class="brand-text">
+      <span class="bm-live">LIVE</span>
+      <span class="bm-bass">BASS</span>
+      <span class="bm-ess">ESSENTIALS</span>
+    </div>
+    <div class="bm-rule"></div>
+    <div class="bm-sub">Triad Flashcards</div>
+  </div>
+  <div class="menu" id="tier-menu"></div>
+</div>
+
+<!-- SESSION -->
+<div id="screen-session" class="hidden">
+  <div class="sess-hdr">
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button class="hdr-btn" onclick="goHome()">⌂ Home</button>
+      <button class="hdr-btn hidden" id="back-btn" onclick="goBack()">← Back</button>
+      <button class="hdr-btn hdr-next hidden" id="next-btn" onclick="nextCard()">Next →</button>
+    </div>
+    <div class="sess-info" id="sess-info">0/0</div>
+  </div>
+  <div class="card" id="card-area"></div>
+  <div id="fb-area"></div>
+</div>
+
+<!-- SUMMARY -->
+<div id="screen-summary" class="hidden">
+  <div class="sum-card">
+    <h2>Nice work!</h2>
+    <div id="sum-stats"></div>
+    <div id="sum-missed" class="missed-sec hidden"></div>
+    <div class="sum-actions">
+      <button class="btn pri" onclick="startSession(S.tier)" style="text-align:center;">Go again</button>
+      <button class="btn" onclick="goHome()" style="text-align:center;">Done</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+<script>
+// ─── CHORD DATA ──────────────────────────────────────────────────────────────
+const DIATONIC_FROM_C = {C:0,D:1,E:2,F:3,G:4,A:5,B:6};
+
+const MAJOR_SCALES = {
+  C:  ['C','D','E','F','G','A','B'],
+  Db: ['Db','Eb','F','Gb','Ab','Bb','C'],
+  D:  ['D','E','F#','G','A','B','C#'],
+  Eb: ['Eb','F','G','Ab','Bb','C','D'],
+  E:  ['E','F#','G#','A','B','C#','D#'],
+  F:  ['F','G','A','Bb','C','D','E'],
+  'F#':['F#','G#','A#','B','C#','D#','E#'],
+  G:  ['G','A','B','C','D','E','F#'],
+  Ab: ['Ab','Bb','C','Db','Eb','F','G'],
+  A:  ['A','B','C#','D','E','F#','G#'],
+  Bb: ['Bb','C','D','Eb','F','G','A'],
+  B:  ['B','C#','D#','E','F#','G#','A#'],
+};
+
+// All 12 roots in circle-of-fourths order (open strings first)
+const ROOTS = ['E','A','D','G','C','F','Bb','Eb','Ab','Db','F#','B'];
+
+const ENHARMONICS = {
+  'C##':'D','D##':'E','E#':'F','F##':'G','G##':'A','A##':'B','B#':'C',
+  'Cbb':'Bb','Dbb':'C','Ebb':'D','Fbb':'Eb','Gbb':'F','Abb':'G','Bbb':'A','Fb':'E','Cb':'B'
+};
+function norm(n) { return ENHARMONICS[n] || n; }
+function flatten(n) {
+  if (n.endsWith('#')) return n.slice(0,-1);
+  if (n.length === 1)  return norm(n + 'b');
+  return norm(n.slice(0,-1) + 'bb');
+}
+function sharpen(n) {
+  if (n.endsWith('b')) return n.slice(0,-1);
+  return norm(n + '#');
+}
+
+function dispAcc(n) {
+  if (n.includes('#')) return n.replace('#','♯');
+  if (n.includes('b')) return n.replace('b','♭');
+  return n;
+}
+function dispNote(n) {
+  return n.includes('b') ? n.slice(0,-1) + '♭' : n.includes('#') ? n.slice(0,-1) + '♯' : n;
+}
+
+// sp = diatonic steps above G2 (same system as notes app)
+function noteToSp(name, octave) {
+  const nat = name.replace(/[#b]/g,'');
+  const d = DIATONIC_FROM_C[nat];
+  return (octave - 2) * 7 + d - 4;
+}
+
+// Find octave that places note closest to targetSp
+function bestOctave(name, targetSp) {
+  const nat = name.replace(/[#b]/g,'');
+  const d = DIATONIC_FROM_C[nat];
+  let best = 2, bestDiff = 999;
+  for (let o = 1; o <= 5; o++) {
+    const sp = (o-2)*7 + d - 4;
+    if (Math.abs(sp - targetSp) < bestDiff) { bestDiff = Math.abs(sp-targetSp); best = o; }
+  }
+  return best;
+}
+
+function computeSps(notes, inversion) {
+  // Target sp for lowest note based on inversion
+  const targets = [3, 1, 2];
+  const target = targets[inversion] || 3;
+  const sps = [], accs = [];
+  const oct0 = bestOctave(notes[0], target);
+  const nat0 = notes[0].replace(/[#b]/g,'');
+  let prevSp = noteToSp(notes[0], oct0);
+  sps.push(prevSp);
+  accs.push(notes[0].includes('#') ? '#' : notes[0].includes('b') ? 'b' : null);
+  for (let i = 1; i < notes.length; i++) {
+    const nat = notes[i].replace(/[#b]/g,'');
+    const d = DIATONIC_FROM_C[nat];
+    let sp = null;
+    for (let o = 1; o <= 6; o++) {
+      const s = (o-2)*7 + d - 4;
+      if (s > prevSp) { sp = s; break; }
+    }
+    sps.push(sp);
+    accs.push(notes[i].includes('#') ? '#' : notes[i].includes('b') ? 'b' : null);
+    prevSp = sp;
+  }
+  return [sps, accs];
+}
+
+const QUAL_DEFS = [
+  { id:'M',   label:'Major',      sym:'',  alts:[0,0,0]  },
+  { id:'m',   label:'minor',      sym:'m', alts:[0,-1,0] },
+  { id:'dim', label:'diminished', sym:'°', alts:[0,-1,-1]},
+  { id:'aug', label:'augmented',  sym:'+', alts:[0,0,1]  },
+];
+const INV_NAMES = ['Root Position','1st Inversion','2nd Inversion'];
+
+function buildAllChords() {
+  const out = [];
+  for (const root of ROOTS) {
+    const scale = MAJOR_SCALES[root];
+    for (const q of QUAL_DEFS) {
+      // Base notes: scale degrees 0 (root), 2 (3rd), 4 (5th) with alterations
+      let base = [scale[0], scale[2], scale[4]].map((n,i) => {
+        if (q.alts[i] === -1) return flatten(n);
+        if (q.alts[i] ===  1) return sharpen(n);
+        return n;
+      });
+      for (let inv = 0; inv < 3; inv++) {
+        const rotated = [...base.slice(inv), ...base.slice(0, inv)];
+        const [sps, accs] = computeSps(rotated, inv);
+        out.push({
+          id: `${root}-${q.id}-${inv}`,
+          root, quality: q.id, inversion: inv,
+          name: root + (q.id === 'M' ? '' : q.sym),
+          fullName: `${dispNote(root)} ${q.label}`,
+          invName: INV_NAMES[inv],
+          notes: rotated,
+          sp: sps, acc: accs,
+          box: 1,
+        });
+      }
+    }
+  }
+  return out;
+}
+const ALL_CHORDS = buildAllChords();
+
+// ─── TIERS ───────────────────────────────────────────────────────────────────
+const TIERS = {
+  beginner:     { label:'Beginner',     desc:'Major triads — C G D A E',      filter: c => c.quality === 'M' && ['C','G','D','A','E'].includes(c.root) },
+  intermediate: { label:'Intermediate', desc:'Major + minor — all 12 roots',  filter: c => ['M','m'].includes(c.quality) },
+  advanced:     { label:'Advanced',     desc:'+ Diminished — all 12 roots',   filter: c => ['M','m','dim'].includes(c.quality) },
+  expert:       { label:'Expert',       desc:'All 4 types — all 12 roots',    filter: c => true },
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let S = { tier:'beginner', boxes:{}, chordAcc:{} };
+let sess = { cardN:0, correct:0, total:0, missed:new Set(), missStreak:{}, history:[], reviewOffset:0 };
+let queue = [];
+let curChord = null, curType = null, answered = false, savedCard = null, autoAdvTimer = null, wrongClickedThisCard = false;
+
+function activeChords() { return ALL_CHORDS.filter(TIERS[S.tier].filter); }
+function boxOf(id) { return S.boxes[id] || 1; }
+function stateKey() { return `lbe-triads-${S.tier}`; }
+
+function saveS() {
+  try {
+    const d = JSON.parse(localStorage.getItem('lbe-triads') || '{}');
+    d.progress = d.progress || {};
+    d.progress[S.tier] = { boxes: S.boxes, chordAcc: S.chordAcc };
+    localStorage.setItem('lbe-triads', JSON.stringify(d));
+  } catch(e) {}
+}
+
+// ─── SCHEDULER ───────────────────────────────────────────────────────────────
+function buildQueue() {
+  const a = activeChords();
+  queue = [...a].sort(() => Math.random()-0.5)
+    .sort((a,b) => {
+      const am = sess.missed.has(a.id) ? 0 : boxOf(a.id);
+      const bm = sess.missed.has(b.id) ? 0 : boxOf(b.id);
+      return am - bm;
+    });
+}
+
+function pickChord() {
+  if (queue.length === 0) buildQueue();
+  if (sess.cardN > 0 && sess.cardN % 3 === 0 && sess.missed.size > 0) {
+    const ids = [...sess.missed];
+    const id = ids[Math.floor(Math.random() * ids.length)];
+    const c = ALL_CHORDS.find(x => x.id === id);
+    if (c) return c;
+  }
+  return queue.shift() || activeChords()[0];
+}
+
+function record(chord, correct) {
+  sess.total++;
+  if (correct) sess.correct++;
+  const streak = sess.missStreak[chord.id] || 0;
+  if (!correct) {
+    sess.missStreak[chord.id] = streak + 1;
+    if (sess.missStreak[chord.id] >= 2) sess.missed.add(chord.id);
+  } else {
+    sess.missStreak[chord.id] = Math.max(0, streak - 1);
+    if (streak <= 1) sess.missed.delete(chord.id);
+  }
+  const acc = S.chordAcc[chord.id] || {c:0,w:0};
+  correct ? acc.c++ : acc.w++;
+  S.chordAcc[chord.id] = acc;
+  S.boxes[chord.id] = correct ? Math.min(5, boxOf(chord.id)+1) : 1;
+  saveS();
+}
+
+// ─── SVG STAFF ───────────────────────────────────────────────────────────────
+const SVG_W = 500;
+const Y0 = 200; const HS = 12;
+const LX1 = 75, LX2 = 468;
+const NX = 230;
+function sy(sp) { return Y0 - sp * HS; }
+
+function addEl(parent, tag, attrs, text) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', 'svg' === tag ? 'svg' : tag);
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
+  if (text !== undefined) el.textContent = text;
+  parent.appendChild(el);
+  return el;
+}
+
+function chordStaffSVG(chord, result) {
+  const sps = chord.sp;
+  const minSp = Math.min(...sps), maxSp = Math.max(...sps);
+  const viewLo = Math.min(minSp - 1, -1);
+  const viewHi = Math.max(maxSp + 1, 9);
+  const top = Math.max(0, sy(viewHi) - 20);
+  const bot = sy(Math.min(viewLo, 0)) + 24;
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', `0 ${top} ${SVG_W} ${bot - top}`);
+  svg.setAttribute('class', 'staff-svg');
+
+  // Staff lines
+  for (let sp = 0; sp <= 8; sp += 2)
+    addEl(svg, 'line', {x1:LX1, y1:sy(sp), x2:LX2, y2:sy(sp), stroke:'#c8c8d8', 'stroke-width':'1.5'});
+
+  // Bass clef
+  addEl(svg, 'text', {x:'6', y:String(sy(4)), 'font-family':"'Bravura','FreeSerif','Segoe UI Symbol',serif", 'font-size':'72', fill:'#c8c8d8', 'dominant-baseline':'middle'}, '𝄢');
+
+  // Ledger lines below staff
+  if (minSp <= -2)
+    for (let p = -2; p >= minSp; p -= 2)
+      addEl(svg, 'line', {x1:NX-18, y1:sy(p), x2:NX+18, y2:sy(p), stroke:'#c8c8d8', 'stroke-width':'1.5'});
+  // Ledger lines above staff
+  if (maxSp >= 10)
+    for (let p = 10; p <= maxSp; p += 2)
+      addEl(svg, 'line', {x1:NX-18, y1:sy(p), x2:NX+18, y2:sy(p), stroke:'#c8c8d8', 'stroke-width':'1.5'});
+
+  const col = result === true ? '#4fc3a1' : result === false ? '#e85e5e' : '#e8a838';
+
+  // Track x offsets for accidentals to avoid collisions (second and third notes may need to shift right)
+  const xOffsets = [0, 0, 0];
+  // If consecutive notes are adjacent (sp diff = 1), second note shifts right
+  for (let i = 1; i < sps.length; i++) {
+    if (sps[i] - sps[i-1] === 1) xOffsets[i] = 12;
+  }
+
+  // Draw noteheads + accidentals
+  for (let i = 0; i < sps.length; i++) {
+    const sp = sps[i], acc = chord.acc[i], xo = xOffsets[i];
+    const ny = sy(sp);
+    const nx = NX + xo;
+    if (acc === '#') addEl(svg, 'text', {x:String(nx-28), y:String(ny+5), 'font-size':'18', fill:col, 'font-weight':'bold', 'text-anchor':'middle'}, '♯');
+    if (acc === 'b') addEl(svg, 'text', {x:String(nx-28), y:String(ny+6), 'font-size':'20', fill:col, 'font-weight':'bold', 'text-anchor':'middle'}, '♭');
+    addEl(svg, 'ellipse', {cx:String(nx), cy:String(ny), rx:'10', ry:'7', fill:col, transform:`rotate(-15,${nx},${ny})`});
+  }
+
+  // Stem: from lowest notehead (+ x offset if any) to above/below highest
+  const stemUp = sps[0] <= 4;
+  const stemX = NX + xOffsets[0] + (stemUp ? 9 : -9);
+  const loNy = sy(sps[0]);
+  const hiNy = sy(sps[sps.length - 1]);
+  addEl(svg, 'line', {
+    x1:String(stemX), y1:String(stemUp ? loNy : hiNy),
+    x2:String(stemX), y2:String(stemUp ? hiNy - 30 : loNy + 30),
+    stroke:col, 'stroke-width':'1.5'
+  });
+
+  return svg;
+}
+
+// ─── CHOICE HELPERS ──────────────────────────────────────────────────────────
+function fwdChoices() {
+  // Always show all 3 inversions of current chord + 1 random other chord
+  const allInvs = ALL_CHORDS.filter(c => c.root === curChord.root && c.quality === curChord.quality);
+  const pool = ALL_CHORDS.filter(c => !(c.root === curChord.root && c.quality === curChord.quality));
+  const rnd = pool[Math.floor(Math.random() * pool.length)];
+  return [...allInvs, rnd].sort(() => Math.random()-0.5);
+}
+
+function revChoices() {
+  const result = [curChord];
+  // Another inversion of same chord
+  const otherInvs = ALL_CHORDS.filter(c => c.root === curChord.root && c.quality === curChord.quality && c.id !== curChord.id);
+  if (otherInvs.length) result.push(otherInvs[Math.floor(Math.random()*otherInvs.length)]);
+  // Same root, different quality
+  const sameRoot = ALL_CHORDS.filter(c => c.root === curChord.root && c.quality !== curChord.quality && c.inversion === curChord.inversion);
+  if (sameRoot.length) result.push(sameRoot[Math.floor(Math.random()*sameRoot.length)]);
+  // Fill to 4 with random others
+  const pool = ALL_CHORDS.filter(c => !result.find(r => r.id === c.id) && c.root !== curChord.root);
+  while (result.length < 4 && pool.length) {
+    const r = pool.splice(Math.floor(Math.random()*pool.length), 1)[0];
+    result.push(r);
+  }
+  return result.slice(0,4).sort(() => Math.random()-0.5);
+}
+
+// ─── CARD RENDERING ──────────────────────────────────────────────────────────
+function renderCard() {
+  const area = document.getElementById('card-area');
+  area.innerHTML = '';
+  const lbl = Object.assign(document.createElement('div'), {className:'card-lbl'});
+  if (curType === 'fwd') {
+    lbl.textContent = 'Which notes are in this chord?';
+    area.appendChild(lbl);
+    renderForward(area);
+  } else {
+    lbl.textContent = 'Name this chord';
+    area.appendChild(lbl);
+    renderReverse(area);
+  }
+}
+
+function renderForward(a) {
+  const cd = document.createElement('div');
+  cd.className = 'chord-display';
+  cd.innerHTML = `<div class="chord-sym">${dispNote(curChord.root)}<span style="font-size:2rem">${QUAL_DEFS.find(q=>q.id===curChord.quality).sym}</span></div><div class="chord-qual">${curChord.fullName}</div><div class="chord-inv-lbl">${curChord.invName}</div>`;
+  a.appendChild(cd);
+
+  const grid = Object.assign(document.createElement('div'), {className:'choices'});
+  fwdChoices().forEach(ch => {
+    const b = Object.assign(document.createElement('button'), {className:'cbtn'});
+    b.dataset.id = ch.id;
+    const notesStr = ch.notes.map(n => dispNote(n)).join(' – ');
+    b.innerHTML = `<span class="cbtn-notes">${notesStr}</span>`;
+    const isCorrect = ch.id === curChord.id;
+    b.onclick = () => handleChoice(isCorrect, b, grid);
+    grid.appendChild(b);
+  });
+  a.appendChild(grid);
+}
+
+function renderReverse(a) {
+  const sw = Object.assign(document.createElement('div'), {id:'sw', style:'width:100%'});
+  sw.appendChild(chordStaffSVG(curChord, null));
+  a.appendChild(sw);
+
+  const grid = Object.assign(document.createElement('div'), {className:'choices'});
+  revChoices().forEach(ch => {
+    const b = Object.assign(document.createElement('button'), {className:'cbtn'});
+    b.dataset.id = ch.id;
+    b.innerHTML = `<span class="cbtn-chord">${ch.fullName}</span><span class="cbtn-inv">${ch.invName}</span>`;
+    const isCorrect = ch.id === curChord.id;
+    b.onclick = () => handleChoice(isCorrect, b, grid);
+    grid.appendChild(b);
+  });
+  a.appendChild(grid);
+}
+
+// ─── ANSWER HANDLERS ─────────────────────────────────────────────────────────
+function handleChoice(correct, btn, grid) {
+  if (answered) return;
+  if (!correct) {
+    btn.classList.add('no'); btn.disabled = true;
+    if (!wrongClickedThisCard) {
+      wrongClickedThisCard = true;
+      if (sess.reviewOffset === 0) { record(curChord, false); sess.history.push({chord:curChord, type:curType, correct:false}); updateSessHdr(); }
+    }
+    const fba = document.getElementById('fb-area');
+    fba.innerHTML = '';
+    fba.appendChild(Object.assign(document.createElement('div'), {className:'fb no', textContent:'Try again'}));
+    return;
+  }
+  answered = true;
+  btn.classList.add('ok');
+  Array.from(grid.querySelectorAll('.cbtn')).forEach(b => b.disabled = true);
+  finish(correct, !wrongClickedThisCard);
+}
+
+function finish(correct, shouldRecord = true) {
+  if (autoAdvTimer) { clearTimeout(autoAdvTimer); autoAdvTimer = null; }
+  if (sess.reviewOffset === 0 && shouldRecord) {
+    record(curChord, correct);
+    sess.history.push({chord:curChord, type:curType, correct});
+  }
+  updateSessHdr();
+  const notesStr = curChord.notes.map(n => dispNote(n)).join(' – ');
+  const fba = document.getElementById('fb-area');
+  const fb = Object.assign(document.createElement('div'), {className:`fb ${correct?'ok':'no'}`});
+  fb.textContent = correct
+    ? `✓ ${curChord.fullName} — ${curChord.invName}  (${notesStr})`
+    : `✗ ${curChord.fullName} — ${curChord.invName}  (${notesStr})`;
+  fba.innerHTML = ''; fba.appendChild(fb);
+  if (correct) {
+    playChordArpeggio(curChord);
+    updateNavBtns();
+    autoAdvTimer = setTimeout(() => { autoAdvTimer = null; nextCard(); }, 1200);
+  } else {
+    const nb = document.getElementById('next-btn');
+    nb.classList.remove('hidden');
+    nb.textContent = sess.total >= 20 ? 'Finish →' : 'Next →';
+    updateNavBtns();
+  }
+}
+
+// ─── SESSION FLOW ─────────────────────────────────────────────────────────────
+function startSession(tier) {
+  if (autoAdvTimer) { clearTimeout(autoAdvTimer); autoAdvTimer = null; }
+  try {
+    const d = JSON.parse(localStorage.getItem('lbe-triads') || '{}');
+    const p = (d.progress || {})[tier] || {};
+    S = { tier, boxes: p.boxes || {}, chordAcc: p.chordAcc || {} };
+  } catch(e) { S = { tier, boxes:{}, chordAcc:{} }; }
+  sess = { cardN:0, correct:0, total:0, missed:new Set(), missStreak:{}, history:[], reviewOffset:0 };
+  savedCard = null;
+  buildQueue();
+  showScreen('session');
+  nextCard();
+}
+
+function nextCard() {
+  if (sess.reviewOffset > 0) {
+    sess.reviewOffset--;
+    if (sess.reviewOffset > 0) { showHistoryCard(); }
+    else if (savedCard) {
+      curChord = savedCard.chord; curType = savedCard.type;
+      savedCard = null; answered = false;
+      document.getElementById('next-btn').classList.add('hidden');
+      document.getElementById('fb-area').innerHTML = '';
+      renderCard(); updateNavBtns();
+    } else {
+      const h = sess.history[sess.history.length-1];
+      curChord = h.chord; curType = h.type; answered = true;
+      document.getElementById('fb-area').innerHTML = '';
+      renderCard(); revealAnswer(h.correct);
+      const nb = document.getElementById('next-btn');
+      nb.classList.remove('hidden'); nb.textContent = 'Next →';
+      updateNavBtns();
+    }
+    return;
+  }
+  if (sess.total >= 20) { showSummary(); return; }
+  answered = false; wrongClickedThisCard = false;
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('fb-area').innerHTML = '';
+  curChord = pickChord();
+  curType = Math.random() < 0.5 ? 'fwd' : 'rev';
+  sess.cardN++;
+  updateSessHdr(); renderCard(); updateNavBtns();
+}
+
+function goBack() {
+  if (autoAdvTimer) { clearTimeout(autoAdvTimer); autoAdvTimer = null; }
+  const maxBack = Math.min(3, sess.history.length);
+  if (sess.reviewOffset >= maxBack) return;
+  if (sess.reviewOffset === 0 && !answered) savedCard = {chord:curChord, type:curType};
+  sess.reviewOffset++;
+  showHistoryCard();
+}
+
+function showHistoryCard() {
+  const h = sess.history[sess.history.length - sess.reviewOffset];
+  curChord = h.chord; curType = h.type; answered = true;
+  document.getElementById('fb-area').innerHTML = '';
+  renderCard(); revealAnswer(h.correct);
+  const nb = document.getElementById('next-btn');
+  nb.classList.remove('hidden'); nb.textContent = 'Next →';
+  updateNavBtns();
+}
+
+function revealAnswer(wasCorrect) {
+  const sw = document.getElementById('sw');
+  if (sw && curType === 'rev') { sw.innerHTML = ''; sw.appendChild(chordStaffSVG(curChord, wasCorrect)); }
+  document.querySelectorAll('.cbtn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === curChord.id) b.classList.add('ok');
+  });
+  const notesStr = curChord.notes.map(n => dispNote(n)).join(' – ');
+  const fba = document.getElementById('fb-area');
+  const fb = Object.assign(document.createElement('div'), {className:`fb ${wasCorrect?'ok':'no'}`});
+  fb.textContent = wasCorrect
+    ? `✓ ${curChord.fullName} — ${curChord.invName}  (${notesStr})`
+    : `✗ ${curChord.fullName} — ${curChord.invName}  (${notesStr})`;
+  fba.innerHTML = ''; fba.appendChild(fb);
+}
+
+function updateNavBtns() {
+  const bb = document.getElementById('back-btn');
+  if (!bb) return;
+  const canBack = sess.reviewOffset < Math.min(3, sess.history.length);
+  bb.classList.toggle('hidden', !canBack);
+}
+
+function updateSessHdr() {
+  document.getElementById('sess-info').textContent = `${sess.correct}/${sess.total}`;
+}
+
+// ─── SUMMARY ─────────────────────────────────────────────────────────────────
+function showSummary() {
+  showScreen('summary');
+  const pct = sess.total > 0 ? Math.round(sess.correct/sess.total*100) : 0;
+  document.querySelector('#screen-summary h2').textContent = pct >= 85 ? 'Great session!' : 'Nice work!';
+  document.getElementById('sum-stats').innerHTML = `
+    <div class="srow"><span class="srow-lbl">Cards answered</span><span class="srow-val">${sess.total}</span></div>
+    <div class="srow"><span class="srow-lbl">Correct</span><span class="srow-val">${sess.correct} (${pct}%)</span></div>
+  `;
+  const ms = document.getElementById('sum-missed');
+  if (sess.missed.size > 0) {
+    ms.classList.remove('hidden');
+    const tags = [...sess.missed].map(id => {
+      const c = ALL_CHORDS.find(x => x.id === id);
+      return c ? `<span class="mtag">${c.fullName} ${c.invName}</span>` : '';
+    }).join('');
+    ms.innerHTML = `<h3>Keep practicing these</h3>${tags}`;
+  } else ms.classList.add('hidden');
+}
+
+// ─── SCREEN / HOME ───────────────────────────────────────────────────────────
+function showScreen(name) {
+  document.querySelectorAll('#app > div').forEach(d => d.classList.add('hidden'));
+  document.getElementById('screen-' + name).classList.remove('hidden');
+}
+function goHome() { showScreen('home'); }
+
+function renderTierMenu() {
+  const el = document.getElementById('tier-menu');
+  if (!el) return;
+  el.innerHTML = '';
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem('lbe-triads') || '{}'); } catch(e) {}
+  for (const [key, tier] of Object.entries(TIERS)) {
+    const btn = document.createElement('button');
+    btn.className = `btn${key === 'beginner' ? ' pri' : ''}`;
+    btn.innerHTML = `<div class="btn-lbl">${tier.label}</div><div class="btn-sub">${tier.desc}</div>`;
+    btn.onclick = () => startSession(key);
+    el.appendChild(btn);
+  }
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let _toastTimer = null;
+function toast(msg) {
+  if (_toastTimer) { clearTimeout(_toastTimer); document.querySelector('.toast')?.remove(); }
+  const t = Object.assign(document.createElement('div'), {className:'toast', textContent:msg});
+  document.body.appendChild(t);
+  _toastTimer = setTimeout(() => { t.remove(); _toastTimer = null; }, 2800);
+}
+
+// ─── AUDIO ───────────────────────────────────────────────────────────────────
+const NOTE_TO_SEMI = {C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function noteToMidi(name, octave) {
+  const nat = name.replace(/[#b]/g,'');
+  let s = NOTE_TO_SEMI[nat];
+  if (name.includes('#')) s++;
+  if (name.includes('b')) s--;
+  return (octave + 1) * 12 + s;
+}
+function midiFromSp(name, sp) {
+  const nat = name.replace(/[#b]/g,'');
+  const d = DIATONIC_FROM_C[nat];
+  const oct = 2 + Math.round((sp - d + 4) / 7);
+  return noteToMidi(name, oct);
+}
+
+let _actx = null;
+function actx() {
+  if (!_actx) _actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_actx.state === 'suspended') _actx.resume();
+  return _actx;
+}
+function playNoteFreq(midi) {
+  try {
+    const ctx = actx(), now = ctx.currentTime;
+    const freq = 440 * Math.pow(2, (midi - 69) / 12);
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(1200, now);
+    lp.frequency.exponentialRampToValueAtTime(350, now + 0.4); lp.Q.value = 1.2;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.45, now + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.18, now + 0.09);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+    lp.connect(g); g.connect(ctx.destination);
+    [{m:1,v:1,'t':'sine'},{m:2,v:0.25,'t':'triangle'},{m:0.5,v:0.4,'t':'sine'}].forEach(({m,v,t}) => {
+      const osc = ctx.createOscillator(), og = ctx.createGain();
+      osc.type = t; osc.frequency.value = freq * m;
+      og.gain.value = v; osc.connect(og); og.connect(lp);
+      osc.start(now); osc.stop(now + 2);
+    });
+  } catch(e) {}
+}
+function playChordArpeggio(chord) {
+  chord.notes.forEach((name, i) => {
+    const midi = midiFromSp(name, chord.sp[i]);
+    setTimeout(() => playNoteFreq(midi), i * 130);
+  });
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderTierMenu();
+</script>
+</body>
+</html>
