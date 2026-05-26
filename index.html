@@ -750,6 +750,7 @@ function playNoteFreq(midi) {
   } catch(e) {}
 }
 function playChordArpeggio(chord) {
+  actx(); // resume AudioContext synchronously within the user gesture
   chord.notes.forEach((name, i) => {
     const midi = midiFromSp(name, chord.sp[i]);
     setTimeout(() => playNoteFreq(midi), i * 130);
